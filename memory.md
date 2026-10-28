@@ -65,3 +65,13 @@ Append entries only. Read before architecture changes; skip updates for purely i
 - Pending: Step 2 data extraction/adapters with source provenance; Step 3 motion
   integration; Step 4 live UI/type checks and staging cleanup. Fix approval,
   deduplication, tenant security and audit semantics before claiming real agents.
+
+## 2026-10-28 / Fix local API service collision
+
+- Changed frontend/vite.config.ts, frontend/playwright.config.ts and README.md
+  to consistently use backend port 8011 instead of the occupied port 8000.
+- Started this repository's backend with explicit app-dir and restarted its
+  Vite process. Other project processes were preserved.
+- Verified all 3 browser tests passed against the running services, including
+  real bootstrap, rack rendering, interaction, mobile and error recovery.
+- Architecture and visual design unchanged. Archive integration remains pending.

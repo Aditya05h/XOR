@@ -32,7 +32,7 @@ configuration for milestone 3; it does not enable provider calls yet.
 Start the API in one terminal:
 
 ```powershell
-./backend/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+./backend/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8011 --reload
 ```
 
 Start the frontend in another:
@@ -41,8 +41,8 @@ Start the frontend in another:
 npm --prefix frontend run dev
 ```
 
-Open http://127.0.0.1:5173. API documentation: http://127.0.0.1:8000/docs.
-Vite proxies `/api` to port 8000. Production hosting needs an equivalent reverse
+Open http://127.0.0.1:5173. API documentation: http://127.0.0.1:8011/docs.
+Vite proxies `/api` to port 8011. Production hosting needs an equivalent reverse
 proxy or a configured `VITE_API_BASE_URL` and matching backend CORS origins.
 The Vite preview server alone does not proxy API requests.
 
