@@ -1,5 +1,7 @@
 """Authorized forecasting, monitoring, durable workflow and preview APIs."""
 import asyncio
+import csv
+import io
 import hashlib
 import json
 import secrets
@@ -9,6 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
+from fastapi.responses import Response as FileResponse
 from fastapi import Depends, HTTPException, Request, Response, WebSocket, WebSocketDisconnect, Query
 from pydantic import BaseModel, Field
 from app.models import HeapIncidentEnvelope, IncidentToken, TelemetryWindowSummary, CapacityForecast
@@ -159,6 +162,15 @@ def register_operations(app, settings, heap, queue, identity, dataset):
             telemetry=TelemetryWindowSummary(window_start=datetime.fromisoformat(points[0]['timestamp']),window_end=datetime.fromisoformat(p['timestamp']),rack_id=rack,tenant_id=p['tenant_id'],resource_type=resource,current_utilization_pct=p['utilization_pct'],safety_margin_pct=20,hard_capacity_limit=p['capacity'],unit=p['unit'],raw_series_sha256=digest)
             if heap.put_envelope(HeapIncidentEnvelope(token=token,telemetry=telemetry,forecast=model)): created.append(token.token_id)
         return {'created':created,'suppressed_transients':suppressed,'synthetic':not bool(body.snapshot_hash)}
+
+    @app.get('/api/telemetry/sample.csv')
+    def sample_csv(principal=Depends(identity)):
+        operator(principal)
+        output=io.StringIO()
+        columns=['timestamp','rack_id','tenant_id','resource_type','value','capacity','unit','workload_id','synthetic']
+        writer=csv.DictWriter(output,fieldnames=columns,extrasaction='ignore');writer.writeheader()
+        writer.writerows(p for p in dataset()['points'] if 'capacity' in p)
+        return FileResponse(output.getvalue(),media_type='text/csv',headers={'Content-Disposition':'attachment; filename="synthetic-12-month-telemetry.csv"'})
 
     @app.post('/api/ingestion/preview')
     def preview(body:CSVImport,principal=Depends(identity)):

@@ -89,3 +89,16 @@ class EndToEndTests(unittest.TestCase):
   self.assertEqual(result.json()['accepted_count'],1)
   other=TestClient(create_app(self.settings));other.post('/api/session',json={'token':'tenant-one-test'})
   self.assertEqual(other.post('/api/ingestion/preview',json={'csv_text':'date,value\n2026-01-01,1'}).status_code,403)
+
+ def test_annual_download_and_local_model(self):
+  import csv,io
+  response=self.client.get('/api/telemetry/sample.csv')
+  self.assertEqual(response.status_code,200)
+  rows=list(csv.DictReader(io.StringIO(response.text)))
+  self.assertEqual(len(rows),26280)
+  report=self.client.get('/api/forecasts/R-01/STORAGE').json()['offline_ml']
+  self.assertIsNotNone(report['next_day_utilization_pct'])
+  self.assertEqual(report['training_cases'],12384)
+  self.assertEqual(report['validation_cases'],13320)
+  other=TestClient(create_app(self.settings));other.post('/api/session',json={'token':'tenant-one-test'})
+  self.assertEqual(other.get('/api/telemetry/sample.csv').status_code,403)

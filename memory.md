@@ -199,3 +199,20 @@ Append entries only. Read before architecture changes; skip updates for purely i
 - Validation: 28 backend tests pass, including full-year wide-format import and
   tenant denial; three real-browser operator/mobile/import flows pass. Production
   build and lint pass. Reviewed the full-page ingestion/forecast screenshot.
+
+## 2026-10-28 / Offline telemetry analysis and incident history
+
+- Removed Archive and Archive Source operator views. Incidents now defaults to
+  active issues; completed advisories remain under Show history. Displayed evidence
+  timestamps/utilization and disabled processing when nothing is queued.
+- Added authorized download of 26,280 annual synthetic rack readings. The synthetic
+  marker survives reimport. Existing replay retains exhaustion/recovery/regime/spike
+  scenarios; no facility changes are performed.
+- Workflow explanations always run locally, independent of legacy provider settings.
+  Added reproducible offline ridge training and a bundled JSON model: first 180 days
+  only, 12,384 training cases, 13,320 later validation cases, MAE 0.3784pp / RMSE
+  0.9674pp. Daily next-step inference supplements the robust capacity forecast;
+  non-daily/insufficient histories are explicitly unsupported by this model.
+- Synthetic model validation is not a claim of real-facility accuracy or recovered
+  ground truth. Tests cover download authorization, counts and model inference.
+- Verification: 29 backend tests, three browser workflows, production build and lint pass.

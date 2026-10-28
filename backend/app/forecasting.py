@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from math import sqrt, isfinite
 from statistics import median, mean
+from app.local_model import predict_daily
 import numpy as np
 import pandas as pd
 
@@ -113,7 +114,7 @@ def forecast_series(points, horizon=60):
            'is_transient_spike':any(spikes[-7:]),'regime_change_detected':bool(regimes),
            'regime_change_description':f'Persistent level change near {times[regimes[-1][0]].date()}; estimated shift {regimes[-1][1]:.1f} percentage points.' if regimes else None}
     gap_count=sum((times[i]-times[i-1]).total_seconds()>86400*1.5 for i in range(1,len(times)))
-    return {'model':model,'history':[{**p,'cleaned_utilization_pct':round(cleaned[i],4),'is_transient_spike':spikes[i],'is_regime_shift':i in {r[0] for r in regimes}} for i,p in enumerate(data)],
+    return {'offline_ml':predict_daily(values,times),'model':model,'history':[{**p,'cleaned_utilization_pct':round(cleaned[i],4),'is_transient_spike':spikes[i],'is_regime_shift':i in {r[0] for r in regimes}} for i,p in enumerate(data)],
             'predictions':predictions,'slope_pct_per_day':round(slope,6),'threshold_pct':threshold,
             'days_to_safety_breach':round(days_breach,2) if enough and days_breach is not None else None,
             'data_quality':{'observations':len(data),'fit_observations':len(data)-start,'missing_daily_gaps':gap_count,'sufficient_history':enough,'calibration_samples':len(calibration_errors),'interval_method':'90% training rolling-origin absolute-error quantile plus residual/leverage uncertainty; approximate, not guaranteed'},

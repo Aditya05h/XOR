@@ -49,6 +49,7 @@ def import_csv(text,heap,options=None):
         for line,source in enumerate(reader,2):
             if line>250001: raise ValueError('Import limited to 250,000 rows')
             row={field:source.get(mapping.get(field,'')) or defaults.get(field,'') for field in ALIASES}
+            row['synthetic']=source.get('synthetic','false').strip().lower() in ('true','1','yes')
             if options.metrics:
                 for resource,column in options.metrics.items():
                     if source.get(column,'').strip(): yield line,dict(row,resource_type=resource,value=source[column],capacity=defaults.get(resource+'_capacity') or row['capacity'],unit=UNITS.get(resource,''))
@@ -67,7 +68,7 @@ def import_csv(text,heap,options=None):
             key=(stamp.isoformat(),rack,tenant,resource)
             if key in seen: raise ValueError('Duplicate timestamp/scope in file')
             seen.add(key)
-            point=dict(timestamp=stamp.isoformat(),rack_id=rack,tenant_id=tenant,resource_type=resource,value=value,capacity=capacity,unit=row['unit'],utilization_pct=100*value/capacity,safety_threshold_pct=80,workload_id=row.get('workload_id') or 'unattributed',synthetic=False)
+            point=dict(timestamp=stamp.isoformat(),rack_id=rack,tenant_id=tenant,resource_type=resource,value=value,capacity=capacity,unit=row['unit'],utilization_pct=100*value/capacity,safety_threshold_pct=80,workload_id=row.get('workload_id') or 'unattributed',synthetic=row['synthetic'])
             accepted.append(point);groups.setdefault((rack,tenant,resource),[]).append(point)
         except (ValueError,TypeError,KeyError) as exc: errors.append({'line':line,'reason':str(exc)})
     windows=[]

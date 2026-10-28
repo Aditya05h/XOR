@@ -48,8 +48,8 @@ and configure `AO02_AUTH_TOKENS`. Never place secrets in `VITE_` variables.
 6. Inspect evidence, model assumptions and audit events. Enter a note and defer,
    reject or approve. Approval records an advisory decision; it never actuates
    infrastructure or proves the underlying risk has disappeared.
-7. Inspect measured Evaluation results or Data CSV import. Archive and Archive
-   Source preserve original scenarios, content and inline logic for inspection.
+7. Inspect Evaluation results or upload/download readings in Telemetry ingestion.
+   Completed advisory records are available through Incidents > Show history.
 
 ## Implemented behavior
 
@@ -151,3 +151,27 @@ risk to queue an advisory based on that complete imported window. This operation
 reads telemetry and never changes facility controls. Production access still
 requires a configured operator token; the local workspace uses the existing
 explicit development-only session setting.
+
+
+## Offline analysis and synthetic telemetry
+
+No external AI API, agent gateway or provider credentials are required. The
+workflow always explains evidence locally. Download 12-month synthetic telemetry
+from Telemetry ingestion: 26,280 daily rack readings, 2025-10-28 through 2026-10-27,
+12 racks, three tenants and six resources. Reimported sample readings retain the
+synthetic marker. The built-in timeline includes transient spikes, regime changes,
+a known storage exhaustion and recovery. Those are simulations, not live events.
+
+Capacity warnings use the local robust trend forecast with calibrated uncertainty.
+The bundled daily-delta ridge regression model is trained offline on the first 180
+days of seed-42 data (12,384 cases), with a separate later validation period
+(13,320 cases; MAE 0.3784 percentage points, RMSE 0.9674). It predicts next-day
+utilization for at least eight consecutive daily readings. It does not recover
+missing ground truth or establish a physical root cause. Synthetic validation does
+not guarantee accuracy on real facility data. Rebuild the bundled weights with
+`backend/.venv/Scripts/python.exe scripts/train-local-model.py` from the repo root.
+
+Incidents defaults to active investigations. Completed advisories stay in History
+with their timestamps and immutable audit records. Monitoring creates an incident
+only for a measured threshold breach or predicted safety crossing within 60 days.
+Archive and Archive Source pages have been removed from the operator workbench.

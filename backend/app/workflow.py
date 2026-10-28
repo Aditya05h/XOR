@@ -28,7 +28,7 @@ class WorkflowBusy(ValueError): pass
 class WorkflowEngine:
     def __init__(self, heap, settings=None):
         self.heap = heap
-        self.provider = ExplanationProvider(settings)
+        self.provider = ExplanationProvider()
         self.checkpoint_path = heap.path + '.checkpoints.sqlite3'
         with heap.connection() as db:
             db.execute('CREATE TABLE IF NOT EXISTS workflow_leases (token TEXT PRIMARY KEY, owner TEXT NOT NULL, expires REAL NOT NULL)')
@@ -185,7 +185,7 @@ class WorkflowEngine:
 
     def status(self, token_id):
         env=self.heap.get_envelope_for_agent(token_id)
-        return {**self._state(env),'envelope':env.model_dump(mode='json'),'analysis_source':'deterministic numerical simulation; optional explanation provider labeled in RCA'}
+        return {**self._state(env),'envelope':env.model_dump(mode='json'),'analysis_source':'local statistical analysis and deterministic evidence explanation; no external gateway'}
 
     def run(self, token_id):
         with self._lease(token_id), SqliteSaver.from_conn_string(self.checkpoint_path) as saver:

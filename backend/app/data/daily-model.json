@@ -1,0 +1,21 @@
+{
+  "model_id": "daily-delta-ridge-v1",
+  "algorithm": "ridge regression, seven daily change features",
+  "training_source": "seed-42 synthetic telemetry; first 180 days only",
+  "training_cases": 12384,
+  "training_end_exclusive": "2026-04-26",
+  "validation_cases": 13320,
+  "validation_mae_pct": 0.37844736998213213,
+  "validation_rmse_pct": 0.9674159859831831,
+  "weights": [
+    0.030562829287490875,
+    0.04057257809846493,
+    0.12649305269307046,
+    0.221573342795085,
+    0.2962587746445101,
+    0.24783922726888535,
+    0.04485044780231313,
+    -0.3602642334966476
+  ],
+  "limitations": "One-day daily-series estimate. Synthetic validation is not evidence of real-facility accuracy. Capacity horizon uses the separate robust trend baseline."
+}
