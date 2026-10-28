@@ -75,3 +75,28 @@ Append entries only. Read before architecture changes; skip updates for purely i
 - Verified all 3 browser tests passed against the running services, including
   real bootstrap, rack rendering, interaction, mobile and error recovery.
 - Architecture and visual design unchanged. Archive integration remains pending.
+
+## 2026-10-28 / Milestone 2 domain and telemetry
+
+- Summary: added validated incident/telemetry/forecast/RCA/remediation/risk/audit
+  models, SQLite shared context, priority heap snapshots and atomic claims,
+  stable ties, active-scope deduplication, restart recovery and internal hop guard.
+- Files: backend/app/models.py, storage.py, telemetry.py, auth.py, config.py,
+  main.py; backend/tests/test_milestone2.py and foundation route expectation;
+  backend/.env.example, docs/milestone2.md, README.md and this ledger.
+- Persistence: exact authorized telemetry windows stored canonically with SHA-256;
+  incident submission validates matching source summary. Audit/snapshot triggers
+  forbid update/delete. Local DB ignored. Protected API requires server-configured
+  bearer principals; tenant filtering applies to readings, events, queue and IDs.
+- Data: deterministic seed 42, fixed 365-day window, 28,470 readings covering all
+  six rack resource classes and CRAC temperature/RPM; five ground-truth scenario
+  events. A new synthetic dataset, not imported archive content or measured KPIs.
+- Verification: 12 unittest tests pass, including concurrent claims/deduplication,
+  restart, priority ties/reopening, loop guard, immutable SQL audit, model safety,
+  tenant access denial, deterministic data and snapshot-to-incident/tamper flow.
+  pip check passes. Frontend and theme untouched.
+- Limits/next: static bearer identity is local development auth, replace for shared
+  deployment. Domain API fields are snake_case; use explicit UI adapters later.
+  SQLite file administrators can bypass application protections. Milestone 3
+  implements numerical forecasts, measured KPIs, ordered LangGraph execution,
+  checkpoints, provider adapters and human review. Archive migration remains pending.

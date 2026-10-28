@@ -103,3 +103,12 @@ The existing `XOR-Agentic_AI/README.md` is preserved unchanged.
 
 Motion lifecycle follows the [Anime.js React integration guide](https://animejs.com/documentation/getting-started/using-with-react/).
 Tailwind uses the [official Vite integration](https://tailwindcss.com/docs/installation/using-vite).
+
+## Milestone 2 backend update
+
+Validated domain models, SQLite incident/snapshot/audit persistence, concurrent
+priority scheduling, static bearer authorization and seeded twelve-month telemetry
+are now implemented. The earlier foundation-only descriptions above refer to the
+initial milestone; the UI still renders reference geometry. See
+[Milestone 2 usage](docs/milestone2.md) for configuration, API contracts and limits.
+Forecasting, executable agents and archive UI/data migration remain pending.
