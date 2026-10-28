@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from fastapi.testclient import TestClient
 from app.config import Settings
@@ -54,5 +55,16 @@ class EndToEndTests(unittest.TestCase):
   self.assertEqual(len(archive['ao02']['timeSeries']['STORAGE']),425)
   sources=self.client.get('/api/archive/sources').json()['sources']
   self.assertIn('src/context/DataContext.tsx',sources)
+
+ def test_recent_transient_does_not_hide_a_persistent_breach(self):
+  from app.forecasting import forecast_series
+  def with_recent_spike(points):
+   report=forecast_series(points)
+   report['model']['is_transient_spike']=True
+   return report
+  with patch('app.operations.forecast_series',side_effect=with_recent_spike):
+   response=self.client.post('/api/monitor',json={'rack_id':'R-04','day':230})
+  self.assertEqual(response.status_code,200,response.text)
+  self.assertTrue(response.json()['created'])
 
 if __name__=='__main__':unittest.main()

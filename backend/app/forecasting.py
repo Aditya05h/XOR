@@ -67,7 +67,7 @@ def forecast_series(points, horizon=60):
     if not isinstance(horizon,int) or not 1 <= horizon <= 365:
         raise ValueError('horizon must be 1–365 days')
     if not points: raise ValueError('telemetry window is empty')
-    data=sorted(points,key=lambda p:p['timestamp'])
+    data=sorted(points,key=lambda p:_time(p['timestamp']))
     scope={(p['rack_id'],p.get('tenant_id'),p['resource_type']) for p in data}
     if len(scope)!=1: raise ValueError('forecast requires one rack, tenant and resource')
     times=list(pd.to_datetime([p['timestamp'] for p in data], utc=True).to_pydatetime())
@@ -137,7 +137,7 @@ def evaluate_dataset(dataset):
     # and spike. Each selected cutoff has a full future observation window.
     cutoffs=(180,230,260,300,329)
     for key,raw in grouped.items():
-        series=sorted(raw,key=lambda p:p['timestamp'])
+        series=sorted(raw,key=lambda p:_time(p['timestamp']))
         for cutoff in cutoffs:
             if cutoff+28>len(series): continue
             result=forecast_series(series[:cutoff],horizon=28)

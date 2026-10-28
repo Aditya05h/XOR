@@ -17,7 +17,7 @@ class ExplanationProvider:
 
     def explain(self, evidence: dict[str, str]) -> dict:
         mode = getattr(self.settings, 'llm_provider', 'deterministic')
-        fallback = {'source': 'deterministic', 'summary': '; '.join(evidence.values()),
+        fallback = {'source': 'deterministic', 'summary': '; '.join(list(evidence.values())[:3]),
                     'evidence_ids': list(evidence), 'limitation': 'Correlation does not establish physical cause.'}
         if mode == 'deterministic': return fallback
         secret = getattr(self.settings, mode + '_api_key', None)

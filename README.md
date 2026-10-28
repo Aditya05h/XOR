@@ -1,21 +1,13 @@
 # XOR Capacity Observatory
 
-AO-02: Seeing trouble before the capacity runs out.
+A read-only AO-02 prototype for forecasting data-center capacity and reviewing
+advisory responses. React/Vite/TypeScript/Tailwind and Anime.js render the original
+warm-neutral SVG facility. FastAPI, NumPy/Pandas and LangGraph calculate forecasts,
+persist evidence and pause for operator review.
 
-Milestone 1 provides a runnable FastAPI + React foundation for a read-only,
-multi-tenant capacity advisory platform. The SVG reference facility contains
-twelve selectable racks and two CRAC units. It supports keyboard selection,
-zoom/reset, scoped Anime.js v4 motion and reduced-motion preferences.
+## Run locally
 
-**Current data is reference geometry only.** No telemetry, forecasts, incident
-processing, tenant authentication or LLM calls are implemented yet. The interface
-labels these unavailable states explicitly. Only public sample layout and health
-endpoints exist; do not add operational data until server authorization is ready.
-
-## Run locally (PowerShell)
-
-Requires Python 3.12+ and Node 22.12+ (verified here with Python 3.14 and Node 24).
-Run commands from the repository root, `D:\XOR`.
+From `D:\XOR` in PowerShell (Python 3.12+, Node 22.12+):
 
 ```powershell
 python -m venv backend/.venv
@@ -24,15 +16,11 @@ python -m venv backend/.venv
 npm --prefix frontend ci
 ```
 
-Optional configuration: copy `backend/.env.example` to `backend/.env` and
-`frontend/.env.example` to `frontend/.env`. Defaults work without credentials.
-Secrets belong only in the backend environment. Provider selection is reserved
-configuration for milestone 3; it does not enable provider calls yet.
-
-Start the API in one terminal:
+Start the backend in one terminal:
 
 ```powershell
-./backend/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8011 --reload
+$env:AO02_DEMO_MODE='true'
+./backend/.venv/Scripts/python.exe -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8011
 ```
 
 Start the frontend in another:
@@ -41,10 +29,72 @@ Start the frontend in another:
 npm --prefix frontend run dev
 ```
 
-Open http://127.0.0.1:5173. API documentation: http://127.0.0.1:8011/docs.
-Vite proxies `/api` to port 8011. Production hosting needs an equivalent reverse
-proxy or a configured `VITE_API_BASE_URL` and matching backend CORS origins.
-The Vite preview server alone does not proxy API requests.
+Open [the local application](http://127.0.0.1:5173/). Choose **Start local synthetic
+demo** to establish a loopback-only development operator session. This opt-in
+preview uses synthetic data; it is disabled by default and in production mode.
+For tenant/operator token access, copy `backend/.env.example` to `backend/.env`
+and configure `AO02_AUTH_TOKENS`. Never place secrets in `VITE_` variables.
+
+## Demonstrate the complete scenario
+
+1. Connect to the synthetic environment and select **R-04**.
+2. Try **Explode selected rack**, select a server component, then reassemble.
+   Drag the floor or use arrow keys to pan; Home centers; Ctrl+wheel zooms.
+   Airflow is illustrative; CRAC fans are a slowed depiction of selected RPM.
+3. In Forecast choose **Load early-warning scenario** (historical day 231).
+   This replays data before a known synthetic storage exhaustion event.
+4. Inspect the forecast and uncertainty band, then choose **Monitor R-04**.
+5. In Incidents choose **Process highest priority**. The backend runs incident
+   reporting, RCA, advisory simulation and risk analysis, then durably pauses.
+6. Inspect evidence, model assumptions and audit events. Enter a note and defer,
+   reject or approve. Approval records an advisory decision; it never actuates
+   infrastructure or proves the underlying risk has disappeared.
+7. Inspect measured Evaluation results or Data CSV import. Archive and Archive
+   Source preserve original scenarios, content and inline logic for inspection.
+
+## Implemented behavior
+
+- Twelve-month seeded telemetry: 12 racks, three tenants, six resource classes,
+  two CRAC units and timestamped exhaustion/recovery/regime/spike scenarios.
+- Robust statistical trends, training-only uncertainty calibration, historical
+  attribution, regime detection and confirmed transient filtering.
+- Chronological held-out evaluation with error, coverage, false alarms, lead time
+  and an explicit evidence-completeness rubric.
+- SQLite incident context, stable priority queue, concurrent claims, active-scope
+  deduplication, loop guards, immutable source windows/forecast records and audit.
+- Durable LangGraph human interrupts and explicit approve/reject/defer handling.
+- Optional schema-validated OpenAI/Gemini explanations with labeled deterministic
+  fallback. Numerical forecasting and simulations never depend on an LLM.
+- Server-enforced tenant access, expiring HttpOnly sessions, authorized REST/WS,
+  origin checks and same-tenant/rack cross-resource evidence correlation.
+- Historical cursor, forecast/attribution workbench, animated six-stage status,
+  decision console, audit inspector and validated CSV import.
+- Original palette, typography and SVG layout preserved, with responsive layouts,
+  keyboard selection/pan, scoped animation cleanup and reduced-motion handling.
+
+## Backend flow
+
+```mermaid
+flowchart LR
+    T[Read-only telemetry] --> F[Statistical forecast]
+    F --> M[Monitoring]
+    M --> Q[Persistent priority queue]
+    Q --> I[Incident report]
+    I --> R[RCA]
+    R --> S[Advisory simulation]
+    S --> K[Risk review]
+    K --> H{Human interrupt}
+    H --> D[Record approve / reject / defer]
+    F --> A[(Snapshots, forecasts and audit)]
+    D --> A
+    A --> API[Authorized API and WebSocket]
+    API --> UI[React SVG workbench]
+```
+
+[API reference](http://127.0.0.1:8011/docs) ·
+[Backend API and architecture details](docs/integration.md) ·
+[Acceptance evidence](docs/acceptance.md) ·
+[Chronological engineering ledger](memory.md).
 
 ## Verification
 
@@ -58,57 +108,28 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Playwright starts both services automatically unless they are already running.
-Its backend command resolves the platform's virtualenv path automatically.
-Screenshots go to ignored `tmp/` in the repo root.
+Browser tests start both services automatically with an isolated ignored test
+SQLite database. They cover the real API-to-operator-decision scenario, mobile
+layout, reduced motion, scene pan, selection, assembly/reset and failure recovery.
 
-## Structure and contracts
+## Scope and practical limits
 
-- `backend/app/main.py`: typed health and public reference-layout endpoints.
-- `backend/app/config.py`: validated environment configuration and private secrets.
-- `backend/app/contracts.py`: Pydantic DTOs with explicit camelCase serialization.
-- `backend/app/core/ao02_state_and_graph.py`: resource, phase and decision enums.
-- `frontend/src/types/ao02.ts`: matching TypeScript contracts.
-- `frontend/src/services/` and `hooks/`: API access, validation and loading state.
-- `frontend/src/components/digital-twin/`: SVG geometry and scoped motion.
-- `frontend/src/index.css`: semantic color and typography tokens with Tailwind v4.
-- `memory.md`: append-only project engineering ledger.
+This is a reproducible advisory prototype. Real sensor feeds and a production
+identity provider are deployment integrations; the built-in dataset is a fixed
+historical replay. CSV imports provide explicit uploaded forecast windows and do
+not silently overwrite that replay. Workflows are run by the operator rather
+than a background infrastructure-control daemon. All remediations remain offline
+hypotheticals with visible assumptions; the risk score is a documented heuristic.
 
-LangGraph is installed and version-locked; executable agent nodes, persistence
-and human interruption will be introduced with the real domain logic. React
-owns selection and zoom; Anime.js only controls presentation. No global store
-is required for the foundation. Nullable forecast lead time and tenant identity
-allow unknown exhaustion estimates and facility-level equipment.
+Static bearer identities are for local development. SQLite triggers protect
+against application updates/deletes; database administrators can replace files.
+Provider adapters were checked against official schemas and mocked transports;
+live provider calls require private credentials and were not verified here.
 
-## Remaining milestones
+Archive constants and diagnoses are labeled authored examples. Conflicting
+archive tenants and IDs remain in separate source datasets instead of being
+silently merged into the backend's reproducible fixture.
 
-2. Validated incident models, persistent priority queue/shared context, server
-   authorization and reproducible twelve-month telemetry.
-3. Statistical forecasts, held-out KPI evaluation, LangGraph agent execution,
-   checkpoint-backed human review, provider integration and immutable evidence.
-4. Authenticated APIs/WebSockets, full pan and exploded component inspection,
-   historical scrubbing, forecast/attribution charts and decision console.
-5. End-to-end scenario, isolation/safety testing and final visual/performance QA.
-
-All mitigation remains offline advisory simulation. Operator approval records
-a decision and must never actuate facility controls.
-
-## Reference decisions
-
-The pasted master request controls the implementation. The OpsPilot PDF supplies
-architectural context; its Git/CI self-healing actions are outside AO-02 scope.
-The handwritten plan supplies the token/queue/shared-context workflow. The
-Anime.js images guide original fine-line drawings and a warm neutral palette.
-The existing `XOR-Agentic_AI/README.md` is preserved unchanged.
-
-Motion lifecycle follows the [Anime.js React integration guide](https://animejs.com/documentation/getting-started/using-with-react/).
-Tailwind uses the [official Vite integration](https://tailwindcss.com/docs/installation/using-vite).
-
-## Milestone 2 backend update
-
-Validated domain models, SQLite incident/snapshot/audit persistence, concurrent
-priority scheduling, static bearer authorization and seeded twelve-month telemetry
-are now implemented. The earlier foundation-only descriptions above refer to the
-initial milestone; the UI still renders reference geometry. See
-[Milestone 2 usage](docs/milestone2.md) for configuration, API contracts and limits.
-Forecasting, executable agents and archive UI/data migration remain pending.
+Vite proxies HTTP and WebSocket `/api` traffic to 8011. For production hosting,
+configure the equivalent reverse proxy and HTTPS/WSS; Vite preview alone does
+not supply that API proxy. Files in `tmp/` and local databases are ignored.

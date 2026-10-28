@@ -21,7 +21,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     queue = PriorityTokenQueue(heap)
     identity = identity_dependency(settings)
     dataset = lru_cache(maxsize=1)(generate_telemetry)
-    app = FastAPI(title=settings.app_name, version="0.1.0")
+    app = FastAPI(title=settings.app_name, version="0.3.0")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,

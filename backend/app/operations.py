@@ -146,7 +146,8 @@ def register_operations(app, settings, heap, queue, identity, dataset):
             points=all_points[:body.day+1]
             report=traced_forecast(points)
             model=CapacityForecast.model_validate(report['model'])
-            if model.is_transient_spike: suppressed+=1; continue
+            if model.is_transient_spike and report['history'][-1]['cleaned_utilization_pct']<80 and report.get('days_to_safety_breach') is None:
+                suppressed+=1; continue
             breach=report.get('days_to_safety_breach')
             if points[-1]['utilization_pct']<80 and (breach is None or breach>60): continue
             canonical=json.dumps(points,sort_keys=True,separators=(',',':'))

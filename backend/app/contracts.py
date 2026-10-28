@@ -66,4 +66,4 @@ class BootstrapDTO(DTO):
 
 class HealthDTO(DTO):
     status: Literal["ok"] = "ok"
-    version: str = "0.1.0"
+    version: str = "0.3.0"

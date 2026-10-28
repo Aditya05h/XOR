@@ -4,7 +4,7 @@ import io
 import json
 import hashlib
 import math
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import BaseModel,Field
 from app.core.ao02_state_and_graph import ResourceType
 
@@ -23,6 +23,7 @@ def import_csv(text,heap):
         try:
             stamp=datetime.fromisoformat(row['timestamp'].replace('Z','+00:00'))
             if stamp.tzinfo is None: raise ValueError('Timestamp must include timezone')
+            stamp=stamp.astimezone(timezone.utc)
             rack=row['rack_id'];tenant=row['tenant_id'];resource=ResourceType(row['resource_type']).value
             if rack not in [f'R-{i:02}' for i in range(1,13)] or tenant not in ('T1','T2','T3'): raise ValueError('Unknown rack or tenant')
             value=float(row['value']);capacity=float(row['capacity'])

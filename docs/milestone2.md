@@ -1,5 +1,7 @@
 # Milestone 2 backend usage
 
+Historical milestone notes. See [integrated backend](integration.md) for the current implemented forecasting, workflow and UI behavior.
+
 The foundation UI still uses public reference geometry. Protected backend data
 is synthetic and does not imply that forecasting or agents have been implemented.
 

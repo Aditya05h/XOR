@@ -160,3 +160,26 @@ Append entries only. Read before architecture changes; skip updates for purely i
 - Next: final documentation, packaging/version consistency, staging cleanup and
   final acceptance summary. Live LLM/sensor deployment remains credential/source
   dependent, not required for deterministic prototype demonstration.
+
+## 2026-10-28 / Milestone 5 final validation and delivery
+
+- Completed the integrated prototype and updated root README, docs/integration.md,
+  docs/acceptance.md and historical milestone2 cross-reference. Environment example
+  documents opt-in preview and provider models; package data includes archived JSON.
+  Backend package/API version is 0.3.0.
+- Final polish: normalized scene line endings, short deterministic RCA summary with
+  detailed evidence retained, coordinated chart entry via Anime.js timeline, UTC
+  normalization for CSV/forecast ordering, and a guard ensuring recently recovered
+  spikes cannot suppress persistent safety breaches. Evidence rubric computes a
+  completeness score separately from human explanation-quality assessment.
+- Final checks: 26 backend tests pass, pip check passes, TypeScript/Vite build and
+  lint pass; 6 Playwright tests pass including actual cookie-authenticated WS
+  upgrade, complete advisory decision flow and mobile/reduced motion. Desktop and
+  mobile snapshots visually reviewed. Bundle295.97kB JS/95.53kB gzip, CSS18.75kB.
+- Cleaned tmp/archive-audit to the Windows recycle bin after preserving required
+  datasets/source content and provenance. Original ZIP remains intact. Preserved
+  unrelated user staging/deletions in XOR-Agentic_AI/README.md and audit report.
+- Boundaries: real sensor feeds and production identity are deployment inputs;
+  live credentialed LLM calls were not verified. The application fully demonstrates
+  the deterministic synthetic read-only pipeline, with explicit hypotheses and
+  approval semantics, rather than claiming real infrastructure remediation.
