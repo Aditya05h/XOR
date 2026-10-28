@@ -1,0 +1,16 @@
+.facility-scene { touch-action: none; user-select: none; cursor: grab; }
+.facility-scene:active { cursor: grabbing; }
+.facility-scene .rack, .facility-scene .server-layer[role=button] { cursor: pointer; }
+.facility-scene .component-active { stroke-width: 1.8; color: var(--color-accent); }
+.facility-scene .component-label { fill: var(--color-ink); stroke: none; font: 7px var(--font-mono); }
+.facility-scene .metric-label { fill: var(--color-muted); stroke: none; font: 7px var(--font-mono); }
+.facility-scene .scene-help { fill: var(--color-muted); font: 7px var(--font-mono); letter-spacing: .6px; }
+.facility-scene .airflow-layer { pointer-events: none; opacity: .7; }
+.facility-scene .server-layer:focus-visible { outline: none; stroke-width: 2; stroke: var(--color-accent); }
+@media (prefers-reduced-motion: reduce) { .facility-scene .air-particle, .facility-scene .exhaust-particle { opacity: .65; } }
+.facility-scene .cooling-unit[role=button] { cursor: pointer; }
+.facility-scene .cooling-unit.cooling-selected { stroke: var(--color-accent); stroke-width: 1.5; }
+.facility-scene .cooling-fan { fill: none; stroke-width: .7; }
+.facility-scene .fan-impeller { transform-box: fill-box; transform-origin: center; }
+.facility-scene .cooling-beacon { fill: var(--color-accent); stroke: none; }
+.facility-scene .cooling-reading { font-size: 7px; }

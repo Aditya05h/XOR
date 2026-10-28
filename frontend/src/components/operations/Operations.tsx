@@ -1,0 +1,45 @@
+import {useEffect,useRef,useState} from 'react'
+import {animate,createScope} from 'animejs'
+import {resourceTypes} from '../../types/ao02'
+import type {Observatory} from '../../hooks/useObservatory'
+import {ForecastChart} from './ForecastChart'
+import {EvidenceLibrary,JsonDetails} from './EvidenceLibrary'
+import './Operations.css'
+import {DataManagement} from './DataManagement'
+const stages=['RESOURCE_MONITORING','INCIDENT_REPORTING','ROOT_CAUSE_ANALYSIS','REMEDIATION_CHECKING','RISK_ANALYSIS','HUMAN_VERIFICATION']
+export function Operations({ops,rack}:{ops:Observatory;rack:string}){
+ const [token,setToken]=useState('')
+ const [tab,setTab]=useState('forecast')
+ const [incidentId,setIncidentId]=useState<string|null>(null)
+ const [notes,setNotes]=useState('')
+ const root=useRef<HTMLDivElement>(null)
+ const selected=ops.incidents.find(i=>i.token.token_id===incidentId)??ops.incidents[0]
+ const phase=selected?.token.current_phase
+ const stageIndex=phase==='RESOLVED'?stages.length:stages.indexOf(phase??'')
+ useEffect(()=>{const element=root.current;const active=element?.querySelector('.phase.active');if(!element||!active)return;const scope=createScope({root:element,mediaQueries:{reduced:'(prefers-reduced-motion: reduce)'}}).add(self=>{if(self?.matches.reduced)return;animate(active,{opacity:[.4,1],duration:350})});return()=>scope.revert()},[phase,tab,ops.principal])
+ if(!ops.principal)return <section className="operations connect-panel"><div><p className="eyebrow">02 / CAPACITY WORKBENCH</p><h2>Connect to the synthetic environment.</h2><p>Explore forecasts, process incidents and inspect every decision. Local preview uses reproducible synthetic data.</p></div><form onSubmit={e=>{e.preventDefault();void ops.login(token)}}><label>Access token<input type="password" autoComplete="off" value={token} onChange={e=>setToken(e.target.value)} placeholder="Configured operator or tenant token"/></label><div className="action-row"><button disabled={ops.busy||!token} type="submit">Connect</button><button type="button" disabled={ops.busy} onClick={()=>void ops.login()}>Start local synthetic demo ↗</button></div></form>{ops.error&&<p role="alert" className="operation-error">{ops.error}</p>}</section>
+ return <div className="operations" ref={root}>
+ <div className="ops-heading"><div><p className="eyebrow">02 / CAPACITY WORKBENCH</p><h2>Evidence before action.</h2></div><div className="session-info">{ops.principal.role==='operator'?'Facility operator':`Tenant ${ops.principal.tenant_id}`} · Synthetic · {ops.streamConnected?'Incident stream connected':'Incident stream disconnected'} <button onClick={()=>void ops.logout()}>Sign out</button></div></div>
+ <nav className="ops-tabs" aria-label="Workbench views">{['forecast','incidents',...(ops.principal.role==='operator'?['evaluation','data','archive','sources']:[])].map(name=><button key={name} aria-pressed={tab===name} onClick={()=>setTab(name)}>{name==='sources'?'Archive source':name}</button>)}</nav>
+ {ops.error&&<p role="alert" className="operation-error">{ops.error}</p>}{ops.notice&&<p role="status" className="operation-notice">{ops.notice}</p>}
+ {tab==='forecast'&&<>
+  <div className="workbench-toolbar"><label>Resource<select value={ops.resource} onChange={e=>ops.setResource(e.target.value as typeof ops.resource)}>{resourceTypes.map(r=><option key={r}>{r}</option>)}</select></label><label className="timeline">Historical cursor · Day {ops.day+1} / 365<input type="range" min="30" max="364" value={ops.day} aria-label="Historical telemetry timeline" onChange={e=>ops.setDay(+e.target.value)}/></label><button onClick={()=>{ops.setDay(230);ops.setResource('STORAGE')}}>Load early-warning scenario</button><button disabled={ops.busy||ops.principal.role!=='operator'} onClick={()=>void ops.scan()}>Monitor {rack} ↗</button></div>
+  {ops.forecast&&<><div className="forecast-facts"><div><small>SELECTED SCOPE</small><strong>{rack} / {ops.resource.replaceAll('_',' ')}</strong></div><div><small>EXHAUSTION ESTIMATE</small><strong>{ops.forecast.model.lead_time_weeks===null?'No crossing in horizon':`${ops.forecast.model.lead_time_weeks.toFixed(1)} weeks`}</strong></div><div><small>SAFETY MARGIN BREACH</small><strong>{ops.forecast.days_to_safety_breach===null?'Not predicted':`${ops.forecast.days_to_safety_breach.toFixed(1)} days`}</strong></div><div><small>REGIME CHANGE</small><strong>{ops.forecast.model.regime_change_detected?'Detected':'Not detected'}</strong></div></div><ForecastChart report={ops.forecast}/><p className="method-note">{ops.forecast.model_configuration_id} · Forecast calculated only from readings available at the historical cursor. Statistical uncertainty is approximate; inspect held-out coverage under Evaluation.</p><details><summary>Forecast evidence, attribution and data quality</summary><JsonDetails value={{forecast:ops.forecast.model,attribution:ops.forecast.attribution,data_quality:ops.forecast.data_quality,slope_pct_per_day:ops.forecast.slope_pct_per_day}}/></details></>}
+ </>}
+ {tab==='incidents'&&<>
+ <div className="action-row"><button disabled={ops.busy||ops.principal.role!=='operator'} onClick={()=>void ops.run()}>Process highest priority ↗</button><button disabled={ops.busy} onClick={ops.refresh}>Refresh evidence</button><span>{ops.incidents.length} incident records</span></div>
+ <div className="incident-layout"><div className="incident-list">{ops.incidents.length===0?<p>No incidents yet. Run monitoring from Forecast to evaluate a resource.</p>:[...ops.incidents].sort((a,b)=>a.token.priority_number-b.token.priority_number).map(i=><button key={i.token.token_id} aria-pressed={selected?.token.token_id===i.token.token_id} onClick={()=>setIncidentId(i.token.token_id)}><span>P{i.token.priority_number} · {i.token.rack_id} · {i.token.tenant_id}</span><strong>{i.token.resource_type.replaceAll('_',' ')}</strong><small>{i.token.current_phase.replaceAll('_',' ')}</small></button>)}</div>
+ {selected&&<article className="incident-detail"><div className="phase-strip" aria-label="Six phase incident workflow">{stages.map((stage,index)=><div key={stage} className={`phase ${phase===stage?'active':''} ${index<stageIndex?'completed':''}`} aria-current={phase===stage?'step':undefined}><span>{index+1}</span>{stage.replaceAll('_',' ').toLowerCase()}</div>)}</div>
+ <p className="token-reference">{selected.token.token_id} · {selected.token.hop_count} transitions · {selected.token.current_phase.replaceAll('_',' ')}</p>
+ {selected.token.current_phase==='RESOURCE_MONITORING'&&<button disabled={ops.busy||ops.principal.role!=='operator'} onClick={()=>void ops.run(selected.token.token_id)}>Investigate this incident</button>}
+ {selected.rca?<section><h3>Root cause investigation</h3><p>{selected.rca.root_cause_summary}</p><p>Measured workload: {selected.rca.driving_workload_signature??'Unattributed'}</p><details><summary>Evidence and explanation provenance</summary><JsonDetails value={selected.rca}/></details></section>:<p>Investigation has not run yet.</p>}
+ {selected.remediation_options.map(option=><section className="advisory-option" key={option.option_id}><h3>{option.title}</h3><p>{option.recommended_action}</p><p><strong>{option.simulated_post_action_utilization_pct.toFixed(1)}%</strong> hypothetical post-action utilization · <strong>{option.projected_lead_time_extension_weeks.toFixed(1)} weeks</strong> estimated extension</p><small>{option.simulation_assumptions}</small></section>)}
+ {selected.risk_evaluation&&<section><h3>Risk review · {selected.risk_evaluation.risk_score<.33?'Low':selected.risk_evaluation.risk_score<.66?'Medium':'High'} ({selected.risk_evaluation.risk_score.toFixed(2)})</h3><p>{selected.risk_evaluation.blast_radius_summary}</p><p>{selected.risk_evaluation.sla_impact_assessment}</p><p>{selected.risk_evaluation.gate_decision.replaceAll('_',' ')}</p></section>}
+ {phase==='HUMAN_VERIFICATION'&&ops.principal.role==='operator'&&<section className="human-review"><h3>Paused for your decision</h3><p>Approval records acceptance of the advisory. Infrastructure controls are outside this application.</p><label>Decision notes<textarea value={notes} onChange={e=>setNotes(e.target.value)} maxLength={2000}/></label><div className="action-row">{(['approve','reject','defer'] as const).map(decision=><button key={decision} disabled={ops.busy||!notes.trim()} onClick={()=>void ops.decide(selected.token.token_id,decision,notes)}>{decision}</button>)}</div></section>}
+ {selected.operator_notes&&<p>Operator notes: {selected.operator_notes}</p>}
+ <details><summary>Audit trail · {selected.audit_trail.length} records</summary><ol className="audit-list">{selected.audit_trail.map(a=><li key={a.audit_id}><small>{new Date(a.timestamp).toLocaleString()} · {a.actor}</small><p>{a.decision_summary}</p><code>{a.telemetry_hash}</code><small>{a.model_configuration_id}</small></li>)}</ol></details>
+ </article>}</div></>}
+ {tab==='data'&&<DataManagement/>}
+ {(tab==='evaluation'||tab==='archive'||tab==='sources')&&<EvidenceLibrary mode={tab}/>}
+ </div>
+}

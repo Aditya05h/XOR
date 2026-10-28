@@ -132,3 +132,31 @@ Append entries only. Read before architecture changes; skip updates for purely i
   RMSE 4.4154 pp, interval coverage 87.02% vs nominal90%, false alarms6/351=1.71%,
   one known exhaustion detected with 7.714 weeks warning. Synthetic baseline only.
 - Next: finalize integrated frontend, mobile/scene/console checks, docs and cleanup.
+
+## 2026-10-28 / Milestone 4 integrated facility and operator workbench
+
+- Preserved existing palette, typography, rack geometry, facility layout and
+  original reference bootstrap contract. Added scoped Anime.js pan/focus,
+  exploded component separation/reassembly, illustrative hot/cold airflow,
+  selectable CRACs and slowed RPM-driven fan motion with pause/reduced motion.
+- Added typed REST services and HttpOnly-session hook, historical cursor and
+  live scoped readings, numerical forecast bands/markers/attribution, measured
+  evaluation cards and explicit completeness rubric, six-phase incident strip,
+  simulations, risk/approval controls and immutable audit inspector.
+- Added validated CSV import/forecast view and lazy archive evidence/source
+  browser preserving both source scenarios. Original source code is escaped
+  inspectable text, not executable UI or operational evidence.
+- WebSocket updates are cookie-authenticated and server-tenant-filtered; Vite
+  now explicitly proxies upgrades. UI confirms actual incident stream connection.
+- Files: frontend/src/App.*, components/digital-twin, components/operations,
+  hooks/useObservatory.ts, services/operations.ts, types/operations.ts,
+  frontend/vite.config.ts, playwright config/tests; backend/app/operations.py.
+- Verification: TypeScript production build and lint pass; 6 Playwright tests
+  pass against real backend. Covered sign-in, authenticated WebSocket, early
+  warning replay, scan→agent review→defer→approve, archive/evaluation inspection,
+  mobile overflow/reduced-motion, pan/reset and explosion/reassembly. Reviewed
+  desktop decision console and connected mobile screenshots. Bundle ~292.4kB
+  JavaScript /94.39kB gzip. Initial null-root animation failure was corrected.
+- Next: final documentation, packaging/version consistency, staging cleanup and
+  final acceptance summary. Live LLM/sensor deployment remains credential/source
+  dependent, not required for deterministic prototype demonstration.

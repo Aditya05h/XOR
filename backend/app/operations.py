@@ -123,7 +123,14 @@ def register_operations(app, settings, heap, queue, identity, dataset):
     @app.get('/api/evaluation')
     def metrics(principal=Depends(identity)):
         operator(principal)
-        return evaluation()
+        reports=envelopes(principal)
+        complete=[e for e in reports if e['token']['current_phase'] in ('HUMAN_VERIFICATION','RESOLVED')]
+        checks=[]
+        for e in complete:
+            with heap.connection() as db:
+                linked=db.execute('SELECT 1 FROM snapshots WHERE hash=?',(e['telemetry']['raw_series_sha256'],)).fetchone() is not None
+            checks.extend([linked,bool(e['audit_trail']),bool(e['rca'] and e['rca']['correlated_signals']),bool(e['remediation_options'] and all(o['simulation_assumptions'] for o in e['remediation_options'])),bool(e['risk_evaluation']),all(a['model_configuration_id'] for a in e['audit_trail'])])
+        return {**evaluation(),'evidence_completeness_pct':round(100*sum(checks)/len(checks),2) if checks else None,'evidence_rubric_case_count':len(complete),'evidence_rubric_checks':['source snapshot exists','audit events exist','RCA evidence supplied','simulation assumptions supplied','risk evaluation supplied','model configuration on audit events'],'explanation_quality':'Requires human scoring; completeness does not prove causal correctness'}
 
     @app.post('/api/monitor')
     def monitor(body:ScanRequest,principal=Depends(identity)):
