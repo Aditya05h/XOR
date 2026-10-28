@@ -29,8 +29,7 @@ Start the frontend in another:
 npm --prefix frontend run dev
 ```
 
-Open [the local application](http://127.0.0.1:5173/). Choose **Start local synthetic
-demo** to establish a loopback-only development operator session. This opt-in
+Open [the local application](http://127.0.0.1:5173/). Choose **Open telemetry workspace** to establish a loopback-only development operator session. This opt-in
 preview uses synthetic data; it is disabled by default and in production mode.
 For tenant/operator token access, copy `backend/.env.example` to `backend/.env`
 and configure `AO02_AUTH_TOKENS`. Never place secrets in `VITE_` variables.
@@ -133,3 +132,22 @@ silently merged into the backend's reproducible fixture.
 Vite proxies HTTP and WebSocket `/api` traffic to 8011. For production hosting,
 configure the equivalent reverse proxy and HTTPS/WSS; Vite preview alone does
 not supply that API proxy. Files in `tmp/` and local databases are ignored.
+
+
+## Import your telemetry
+
+Open the operator workspace and choose Telemetry ingestion (the default view).
+Upload a CSV, review five source rows, and match your own column names. Common
+names such as date, time, usage and limit are detected automatically. Supply shared
+rack, tenant, resource or capacity values when those are absent from the file.
+Choose a timezone for dates without an offset. Select row-based readings or a wide
+table with separate consumption columns and a capacity for each selected resource.
+Standard units are TB, kW, C, Gbps, VM and seats. Current facility identifiers are
+R-01 through R-12 and T1 through T3; map external identifiers before importing.
+The upload limit is 25 MB / 250,000 source rows. Rejected readings show line-specific
+reasons. Accepted series remain immutable and separate from the sample timeline.
+Choose Analyse to view the uploaded history and forecast, then Evaluate capacity
+risk to queue an advisory based on that complete imported window. This operation
+reads telemetry and never changes facility controls. Production access still
+requires a configured operator token; the local workspace uses the existing
+explicit development-only session setting.

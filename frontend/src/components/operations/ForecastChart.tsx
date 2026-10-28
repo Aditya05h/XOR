@@ -25,5 +25,5 @@ export function ForecastChart({report}:{report:Forecast}){
   <text x="40" y="250">{history[0]?.timestamp.slice(0,10)}</text><text x="650" y="250">Projected · {report.predictions.at(-1)?.timestamp.slice(0,10)}</text>
   {all.map((p,i)=><rect key={p.timestamp} x={x(i)-3} y="22" width="6" height="200" fill="transparent" onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(null)}><title>{p.timestamp.slice(0,10)}: {p.value.toFixed(2)}%</title></rect>)}
   {hover!==null&&all[hover]&&<g><circle cx={x(hover)} cy={y(all[hover].value)} r="4" fill="var(--color-accent)"/><text x="45" y="15">{all[hover].timestamp.slice(0,10)} · {all[hover].value.toFixed(2)}%</text></g>}
- </svg><p className="plot-key">Solid: synthetic observations · Dashed: forecast · Shaded: approximate prediction interval · 80% safety / 100% capacity</p></div>
+ </svg><p className="plot-key">Solid: observed telemetry · Dashed: forecast · Shaded: approximate prediction interval · 80% safety / 100% capacity</p></div>
 }

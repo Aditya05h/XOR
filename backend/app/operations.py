@@ -15,7 +15,7 @@ from app.models import HeapIncidentEnvelope, IncidentToken, TelemetryWindowSumma
 from app.core.ao02_state_and_graph import ResourceType
 from app.forecasting import forecast_series, evaluate_dataset
 from app.workflow import WorkflowEngine
-from app.ingestion import CSVImport, import_csv
+from app.ingestion import CSVImport, import_csv, inspect_csv
 
 class ScanRequest(BaseModel):
     rack_id: str | None = None
@@ -85,6 +85,7 @@ def register_operations(app, settings, heap, queue, identity, dataset):
             if secrets.compare_digest(token,body.token): return session(response,principal.model_dump())
         raise HTTPException(401,'Invalid credentials')
 
+    @app.post('/api/session/local')
     @app.post('/api/session/demo')
     def demo(request: Request,response: Response):
         trusted_origin(request)
@@ -143,7 +144,7 @@ def register_operations(app, settings, heap, queue, identity, dataset):
             imported=json.loads(row[0]);groups={(imported[0]['rack_id'],imported[0]['resource_type']):imported}
         for (rack,resource),all_points in groups.items():
             if body.rack_id and body.rack_id!=rack: continue
-            points=all_points[:body.day+1]
+            points=all_points if body.snapshot_hash else all_points[:body.day+1]
             report=traced_forecast(points)
             model=CapacityForecast.model_validate(report['model'])
             if model.is_transient_spike and report['history'][-1]['cleaned_utilization_pct']<80 and report.get('days_to_safety_breach') is None:
@@ -159,10 +160,15 @@ def register_operations(app, settings, heap, queue, identity, dataset):
             if heap.put_envelope(HeapIncidentEnvelope(token=token,telemetry=telemetry,forecast=model)): created.append(token.token_id)
         return {'created':created,'suppressed_transients':suppressed,'synthetic':not bool(body.snapshot_hash)}
 
+    @app.post('/api/ingestion/preview')
+    def preview(body:CSVImport,principal=Depends(identity)):
+        operator(principal)
+        return inspect_csv(body.csv_text)
+
     @app.post('/api/ingestion/csv')
     def ingest(body:CSVImport,principal=Depends(identity)):
         operator(principal)
-        try: return import_csv(body.csv_text,heap)
+        try: return import_csv(body.csv_text,heap,body)
         except ValueError as exc: raise HTTPException(422,str(exc))
 
     @app.get('/api/snapshots/{digest}/forecast')

@@ -67,4 +67,25 @@ class EndToEndTests(unittest.TestCase):
   self.assertEqual(response.status_code,200,response.text)
   self.assertTrue(response.json()['created'])
 
-if __name__=='__main__':unittest.main()
+
+
+ def test_flexible_year_import_and_wide_metrics(self):
+  from datetime import datetime,timedelta
+  rows=['Date,Asset,Customer,Disk,Electricity']
+  for i in range(365): rows.append(f"{(datetime(2025,1,1)+timedelta(days=i)).isoformat()},R-01,T1,{30+i/10},5")
+  text='\n'.join(rows)
+  self.assertEqual(self.client.post('/api/session/local').status_code,200)
+  preview=self.client.post('/api/ingestion/preview',json={'csv_text':text}).json()
+  self.assertEqual(preview['mapping']['timestamp'],'Date')
+  result=self.client.post('/api/ingestion/csv',json={'csv_text':text,'mapping':{'timestamp':'Date','rack_id':'Asset','tenant_id':'Customer'},'metrics':{'STORAGE':'Disk','POWER':'Electricity'},'defaults':{'STORAGE_capacity':'100','POWER_capacity':'15'},'timezone':'UTC'})
+  self.assertEqual(result.status_code,200,result.text)
+  data=result.json();self.assertEqual(data['accepted_count'],730);self.assertEqual(data['rejected_count'],0)
+  self.assertEqual(len(data['windows']),2)
+  report=self.client.get('/api/snapshots/'+data['windows'][0]['hash']+'/forecast')
+  self.assertEqual(report.status_code,200,report.text)
+ def test_aliases_and_explicit_defaults(self):
+  result=self.client.post('/api/ingestion/csv',json={'csv_text':'date,usage,limit\n2026-01-01,45,100','defaults':{'rack_id':'R-01','tenant_id':'T1','resource_type':'disk'}})
+  self.assertEqual(result.status_code,200,result.text)
+  self.assertEqual(result.json()['accepted_count'],1)
+  other=TestClient(create_app(self.settings));other.post('/api/session',json={'token':'tenant-one-test'})
+  self.assertEqual(other.post('/api/ingestion/preview',json={'csv_text':'date,value\n2026-01-01,1'}).status_code,403)

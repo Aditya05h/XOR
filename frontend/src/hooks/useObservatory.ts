@@ -36,7 +36,7 @@ export function useObservatory(rack:string){
    return()=>socket.close()
  },[principal])
  async function action<T>(fn:()=>Promise<T>,success?:string){setBusy(true);setError(null);try{const result=await fn();refresh();if(success)setNotice(success);return result}catch(e){setError(e instanceof Error?e.message:String(e));return null}finally{setBusy(false)}}
- async function login(token?:string){const p=await action(()=>token?post<Principal>('/session',{token}):post<Principal>('/session/demo'),'Synthetic environment connected');if(p)setPrincipal(p)}
+ async function login(token?:string){const p=await action(()=>token?post<Principal>('/session',{token}):post<Principal>('/session/local'),'Operator workspace connected');if(p)setPrincipal(p)}
  async function logout(){await action(()=>request('/session',{method:'DELETE'}));setPrincipal(null);setFacility(null);setForecast(null);setIncidents([])}
  async function scan(){await action(async()=>{const result=await post<{created:string[]}>('/monitor',{rack_id:rack,day});setNotice(`${result.created.length} incident(s) created; duplicate active scopes retained`);return result})}
  async function run(id?:string){await action(()=>post<WorkflowStatus>(id?`/incidents/${id}/run`:'/workflow/run-next'),'Workflow advanced; inspect the evidence and human-review state')}

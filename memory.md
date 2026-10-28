@@ -183,3 +183,19 @@ Append entries only. Read before architecture changes; skip updates for purely i
   live credentialed LLM calls were not verified. The application fully demonstrates
   the deterministic synthetic read-only pipeline, with explicit hypotheses and
   approval semantics, rather than claiming real infrastructure remediation.
+
+## 2026-10-28 / Operator telemetry ingestion
+
+- Made Telemetry ingestion the default workbench view and replaced the synthetic
+  demo entry with a local operator workspace entry; configured tokens and existing
+  development-only loopback/session checks remain enforced.
+- Added CSV preview, common-header detection, editable column mapping, shared
+  values, explicit timezone selection and wide-table resource columns/capacities.
+  Raised import limits to 25 MB / 250,000 source rows for annual facility datasets.
+- Imported series support history/forecast inspection and explicit risk evaluation;
+  monitoring uses the complete uploaded window. Original source hashes, row errors,
+  immutable storage and tenant authorization remain. Current rack/tenant scope is
+  R-01 through R-12 / T1 through T3; external identifiers need mapping beforehand.
+- Validation: 28 backend tests pass, including full-year wide-format import and
+  tenant denial; three real-browser operator/mobile/import flows pass. Production
+  build and lint pass. Reviewed the full-page ingestion/forecast screenshot.
