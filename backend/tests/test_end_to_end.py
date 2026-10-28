@@ -97,3 +97,21 @@ class EndToEndTests(unittest.TestCase):
   self.assertEqual(report['validation_cases'],13320)
   other=TestClient(create_app(self.settings));other.post('/api/session',json={'token':'tenant-one-test'})
   self.assertEqual(other.get('/api/telemetry/sample.csv').status_code,404)
+
+ def test_upload_session_survives_restart_and_expiry_revokes_access(self):
+  import sqlite3,time
+  restarted=TestClient(create_app(self.settings))
+  restarted.cookies.update(self.client.cookies)
+  self.assertEqual(restarted.get('/api/session').json()['role'],'operator')
+  body={'csv_text':'timestamp,rack_id,tenant_id,resource_type,value,capacity,unit\n2026-01-01,R-01,T1,STORAGE,45,100,TB'}
+  self.assertEqual(restarted.post('/api/ingestion/preview',json=body).status_code,200)
+  self.assertEqual(restarted.post('/api/ingestion/csv',json=body).json()['accepted_count'],1)
+  db=sqlite3.connect(self.path)
+  with db: db.execute('UPDATE operator_sessions SET expires=?',(time.time()-1,))
+  db.close()
+  self.assertIsNone(restarted.get('/api/session').json())
+  self.assertEqual(restarted.post('/api/ingestion/csv',json=body).status_code,401)
+ def test_logout_revokes_session_across_app_instances(self):
+  restarted=TestClient(create_app(self.settings));restarted.cookies.update(self.client.cookies)
+  self.client.delete('/api/session')
+  self.assertIsNone(restarted.get('/api/session').json())

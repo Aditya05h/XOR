@@ -223,3 +223,16 @@ Append entries only. Read before architecture changes; skip updates for purely i
   and analysis remain available. Exported the existing annual rack dataset to
   ignored tmp/synthetic-12-month-telemetry.csv for delivery in Codex (26,280 rows).
 - Updated UI regression checks and download documentation to match this change.
+
+## 2026-10-29 / Repair stale upload authentication
+
+- Root cause: backend restart erased in-memory sessions while the open page kept
+  an operator principal, causing CSV preview/import to return bearer-required 401.
+- Persisted eight-hour sessions in SQLite using token digests. Logout revokes them
+  across app instances. Explicitly close connections, including on exceptions.
+- Central unauthorized handling clears stale protected UI and requests reconnection;
+  no automatic privilege escalation or bypass. WebSocket reconnects after outages.
+  Switching workbench tabs clears unrelated previous workflow notices.
+- Verification: 31 backend tests pass including restart/upload/expiry/revocation;
+  five browser flows pass including all 26,280 annual CSV readings, local forecast,
+  expired-cookie reconnection, mobile view and human-review workflow. Build/lint pass.

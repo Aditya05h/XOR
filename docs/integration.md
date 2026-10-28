@@ -17,8 +17,10 @@ Public bootstrap retains its original camelCase reference-layout contract.
 Authenticated domain endpoints use snake_case and frontend typed service mapping.
 The public geometry contains no tenant readings. Credentials establish a session
 through POST /api/session; cookie values are random, HttpOnly and expire in eight
-hours. Session lookup is in-process; restarting requires sign-in again while
-incidents, audit and human-review checkpoints remain durable.
+hours. Session records persist in SQLite using SHA-256 token digests, so backend
+restarts preserve sign-in until expiry or logout. Expired/revoked sessions return
+the frontend to sign-in; the incident stream reconnects after temporary outages.
+Incidents, audit and human-review checkpoints remain durable.
 
 | Endpoint | Behavior |
 |---|---|

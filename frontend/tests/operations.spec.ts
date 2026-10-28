@@ -1,3 +1,5 @@
+import {execFileSync} from 'node:child_process'
+import {resolve} from 'node:path'
 import {test,expect} from '@playwright/test'
 test('operator completes telemetry to human review, preserves evidence and explores archive',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message))
@@ -61,4 +63,30 @@ test('operator previews alternate telemetry columns and imports a full year',asy
  await expect(page.getByRole('button',{name:'Evaluate capacity risk'})).toBeVisible()
  await expect(page.getByText('Offline trained model:',{exact:false})).toBeVisible()
  await page.screenshot({path:'../tmp/telemetry-ingestion.png',fullPage:true})
+})
+
+test('expired upload session returns to sign-in and reconnects safely',async({page,context})=>{
+ await page.goto('/')
+ await page.getByRole('button',{name:'Open telemetry workspace'}).click()
+ await expect(page.getByLabel('Upload telemetry CSV')).toBeVisible()
+ await context.clearCookies()
+ await page.getByLabel('Upload telemetry CSV').setInputFiles({name:'history.csv',mimeType:'text/csv',buffer:Buffer.from('date,usage,limit\n2026-01-01,45,100')})
+ await expect(page.getByRole('button',{name:'Open telemetry workspace'})).toBeVisible()
+ await expect(page.getByText('Your session has expired. Reconnect to continue uploading telemetry.')).toBeVisible()
+ await page.getByRole('button',{name:'Open telemetry workspace'}).click()
+ await page.getByLabel('Upload telemetry CSV').setInputFiles({name:'history.csv',mimeType:'text/csv',buffer:Buffer.from('date,usage,limit\n2026-01-01,45,100')})
+ await expect(page.getByRole('heading',{name:'Match your columns'})).toBeVisible()
+})
+test('provided annual CSV imports all 26280 readings and produces an offline forecast',async({page})=>{
+ await page.goto('/')
+ await page.getByRole('button',{name:'Open telemetry workspace'}).click()
+ const python=resolve('../backend/.venv',process.platform==='win32'?'Scripts/python.exe':'bin/python')
+ const csv=execFileSync(python,['-c',"import csv,sys;from app.telemetry import generate_telemetry;w=csv.DictWriter(sys.stdout,fieldnames=['timestamp','rack_id','tenant_id','resource_type','value','capacity','unit','workload_id','synthetic'],extrasaction='ignore');w.writeheader();w.writerows(p for p in generate_telemetry()['points'] if 'capacity' in p)"],{cwd:resolve('../backend'),maxBuffer:4_000_000})
+ await page.getByLabel('Upload telemetry CSV').setInputFiles({name:'synthetic-12-month-telemetry.csv',mimeType:'text/csv',buffer:csv})
+ await expect(page.getByRole('heading',{name:'Match your columns'})).toBeVisible()
+ await page.getByRole('button',{name:'Import readings',exact:true}).click()
+ await expect(page.getByRole('heading',{name:/26280 accepted.*0 rejected/})).toBeVisible({timeout:15000})
+ await page.getByRole('button',{name:'Analyse R-01 / STORAGE (365 readings)',exact:true}).click()
+ await expect(page.getByText('Offline trained model:',{exact:false})).toBeVisible()
+ await page.screenshot({path:'../tmp/annual-telemetry-import.png',fullPage:true})
 })
