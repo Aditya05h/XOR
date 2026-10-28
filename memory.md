@@ -41,3 +41,27 @@ Append entries only. Read before architecture changes; skip updates for purely i
   checkpointed LangGraph human review. Full pan, exploded rack components,
   timeline scrubbing, charts, WebSockets and decision console remain pending.
   No forecasts, operational health, performance KPIs or agent results are faked.
+
+## 2026-10-28 / Archive integration Step 1 audit
+
+- Summary: inspected the live XOR shell and safely extracted 65 application files
+  from Agentic_AI .zip into ignored tmp/archive-audit. Cataloged all 21,933 ZIP
+  entries without running archive code, Git hooks or bundled dependencies.
+- Touched files: docs/archive-integration-audit.md, docs/archive-inventory.json,
+  and this appended ledger entry. Application source and visual tokens unchanged.
+- Architectural findings: two inconsistent demo datasets/tenant mappings; four
+  seeded AO-02 incidents; nine pages; browser-only queue/shared heap and phase
+  simulation; static KPI claims; 365+60 point formula generator; Three.js and
+  CSS airflow/fan/camera interactions. No server agents or real isolation in ZIP.
+- Visual lock: preserved existing palette, typography, SVG geometry and layout;
+  stored source fingerprints. Motion must be adapted to current Anime.js/SVG.
+- Live verification: localhost shell loads, but bootstrap returns 404. Port 8000
+  serves a different AO-02 v0.3.0 API without /api/bootstrap. Multiple listeners
+  exist; no unrelated service was stopped. Current scene cannot render until
+  the target service/proxy is reconciled.
+- Verification: checked archive containment during extraction; enumerated source
+  hashes/exports; inspected source models, generators, state and motion code;
+  checked live browser/error and API schema. No code tests needed for audit docs.
+- Pending: Step 2 data extraction/adapters with source provenance; Step 3 motion
+  integration; Step 4 live UI/type checks and staging cleanup. Fix approval,
+  deduplication, tenant security and audit semantics before claiming real agents.

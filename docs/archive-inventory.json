@@ -1,0 +1,547 @@
+{
+  "archive": "D:\\XOR - Project Requirements\\Agentic_AI .zip",
+  "archiveSha256": "4f97038bf0fa92aee00ab2b72514c47300fdd782a05550dabbac8d90484e1a1b",
+  "totalEntries": 21933,
+  "excludedEntryCounts": {
+    ".git": 297,
+    "node_modules": 21550,
+    "dist": 10083
+  },
+  "applicationFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 253,
+      "sha256": "fe718e7babb14f3cbad2d97f08889b9ce5215ed3fe0e43b2b8cfbfb3b9b844e8",
+      "exports": []
+    },
+    {
+      "path": ".oxlintrc.json",
+      "bytes": 245,
+      "sha256": "b4d344818a1e1bf43997e4744a9153c8eef770c98b58229cd86363dabb85ded4",
+      "exports": []
+    },
+    {
+      "path": "index.html",
+      "bytes": 1103,
+      "sha256": "83e11012d1740ec9ac8e1cf858433876ffd29a6068ecf7bd4b5463c1d67ee807",
+      "exports": []
+    },
+    {
+      "path": "memory.md",
+      "bytes": 20267,
+      "sha256": "740dbb4de1b5263e97461f6423253185adf568ed202f64aa661d196be73f554a",
+      "exports": []
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 120457,
+      "sha256": "3e8a3178ad6551ba57070a1454eeefa8765903ec54331e1790cca0eef5d90e33",
+      "exports": []
+    },
+    {
+      "path": "package.json",
+      "bytes": 901,
+      "sha256": "6bd8d36abb0d53d48995fee1d809a428881b62ad335f7b4e22b8954b3c2818ed",
+      "exports": []
+    },
+    {
+      "path": "public/favicon.svg",
+      "bytes": 9522,
+      "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66",
+      "exports": []
+    },
+    {
+      "path": "public/icons.svg",
+      "bytes": 5031,
+      "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a",
+      "exports": []
+    },
+    {
+      "path": "README.md",
+      "bytes": 3546,
+      "sha256": "ff558823b68df2ef6c5dadb28929be7166dec05fe5eab5125da64bda3bb7b35f",
+      "exports": []
+    },
+    {
+      "path": "src/App.css",
+      "bytes": 20,
+      "sha256": "1835e96a28ea956082da9dcee7a9ddd4fc2cf7b317cd8e193ea090f6e7b5b979",
+      "exports": []
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 2786,
+      "sha256": "425cc520ad97d471c656d5962cb97690be087dffa01e5c9f8fbc6a0aa20dee10",
+      "exports": [
+        "App"
+      ]
+    },
+    {
+      "path": "src/assets/hero.png",
+      "bytes": 13057,
+      "sha256": "881ffbcaafc212e49addad08846a5b82761355fa20624253af3477ba33262c5c",
+      "exports": []
+    },
+    {
+      "path": "src/assets/react.svg",
+      "bytes": 4126,
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5",
+      "exports": []
+    },
+    {
+      "path": "src/assets/vite.svg",
+      "bytes": 8709,
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f",
+      "exports": []
+    },
+    {
+      "path": "src/components/common/GlobalSearchModal.tsx",
+      "bytes": 9233,
+      "sha256": "b5a057e08227c1a0187e17f0101c140cc5894c93ed08ae081681fa7c65f72152",
+      "exports": [
+        "GlobalSearchModal"
+      ]
+    },
+    {
+      "path": "src/components/common/Header.tsx",
+      "bytes": 13221,
+      "sha256": "208d3f3c923cccfe3273f8a9efe16c0b6a6a817ef2728e7561d7807323534cd7",
+      "exports": [
+        "Header"
+      ]
+    },
+    {
+      "path": "src/components/common/Sidebar.tsx",
+      "bytes": 6500,
+      "sha256": "9528029af5c667d744088198ad2f368e28b361d05868880bd0cf35312f41a35b",
+      "exports": [
+        "Sidebar"
+      ]
+    },
+    {
+      "path": "src/components/common/ToastContainer.tsx",
+      "bytes": 2013,
+      "sha256": "10abd27ee4b4c4c7707ef81921dcadb7d1077b08e9f9d463dfb9e2af29f5c681",
+      "exports": [
+        "ToastContainer"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/Airflow.tsx",
+      "bytes": 9020,
+      "sha256": "33603550849137ee439162df973a7ccf62bdb1d2e56e138e65c02e6d6144a7ad",
+      "exports": [
+        "Airflow"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/AutomatedFaultModal.tsx",
+      "bytes": 5524,
+      "sha256": "f14773d73357d73d089932fe2c3e2fa8848615fcbcc46e5e0f83ba1f85d30abb",
+      "exports": [
+        "AutomatedFaultModal"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/CoolerDetailModal.tsx",
+      "bytes": 17099,
+      "sha256": "8932b936502aed418bf85dce49d21aad9beeafc99adbc262ca773686184ec542",
+      "exports": [
+        "CoolerDetailModal"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/CoolingPipe.tsx",
+      "bytes": 4514,
+      "sha256": "e362a973aedacd0aec4aad3c9ad7e15f582dacf7efff5cb496c007881ace3881",
+      "exports": [
+        "CoolingPipe"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/CRACUnit.tsx",
+      "bytes": 31091,
+      "sha256": "2fbfa7e64a9b75cbe9cca2f0482e8fc73c8a3e688586d5a5d0d84b93768b7f11",
+      "exports": [
+        "CRACUnit"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/DataCenterScene.tsx",
+      "bytes": 11989,
+      "sha256": "3ad0ae1f6d13adacdc98c2051f9735d816ef788898d1dac0115fa19710eb0b8e",
+      "exports": [
+        "DataCenterScene"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/FloorTiles.tsx",
+      "bytes": 3715,
+      "sha256": "6c9b6a9c18f922b2740c8834e4b4e8714002f49ba5d499accefd52a1866daeff",
+      "exports": [
+        "FloorTiles"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/RackDetailDrawer.tsx",
+      "bytes": 11223,
+      "sha256": "106fe9f45f27fbdcee977fa793eb94a6bde6af7671962b7025a55f8e23b32e44",
+      "exports": [
+        "RackDetailDrawer"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/SceneControls.tsx",
+      "bytes": 7196,
+      "sha256": "8d521da705f39e2e4fe97c647f966b5b309402768652240065de218dd1884543",
+      "exports": [
+        "SceneControls"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/ServerRack.tsx",
+      "bytes": 10327,
+      "sha256": "e8092e423800317473dbfa5e73abec07caecd29860ebf2e4a813b047af83cc28",
+      "exports": [
+        "ServerRack"
+      ]
+    },
+    {
+      "path": "src/components/datacenter/ThermalLegend.tsx",
+      "bytes": 4175,
+      "sha256": "ba5536b105560521012ec102224e94382563348ab52fabe966ce1305434a138d",
+      "exports": [
+        "ThermalLegend"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/ColdAirflow2D.tsx",
+      "bytes": 2675,
+      "sha256": "cde11b711a681d7d1bda2d2e9e0376a49752b8c377c8eba7ae18ebec780d6676",
+      "exports": [
+        "ColdAirflow2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/CoolingPipe2D.tsx",
+      "bytes": 5564,
+      "sha256": "e894839186145f622afc61beb9aeefe292cde4777db816a5bbf03001509d709c",
+      "exports": [
+        "CoolingPipe2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/CRACUnit2D.tsx",
+      "bytes": 8255,
+      "sha256": "07f4cdbf2230ba3524259297219f38f57fc9a98b41c5a41df1a9ed0c890c08c8",
+      "exports": [
+        "CRACUnit2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/DataCenter2DScene.tsx",
+      "bytes": 17631,
+      "sha256": "fbe1e2551f4f24130092b786fcf02ccc118f51f80a324e6b3fb7c21ab1952848",
+      "exports": [
+        "DataCenter2DScene"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/HotAirflow2D.tsx",
+      "bytes": 2873,
+      "sha256": "2f07c8a5f288af8a3d42004bd0db4b6349dbfd74d86a3c12e1a4443afb24b9a8",
+      "exports": [
+        "HotAirflow2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/ResourceIndicator2D.tsx",
+      "bytes": 1045,
+      "sha256": "4ea36d2004e3add84bef4ecdd745abaf25df4c669c27d890da5016e67959766e",
+      "exports": [
+        "ResourceIndicator2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/SceneControls2D.tsx",
+      "bytes": 4523,
+      "sha256": "86d85c3b4c01aa76590be817ab80c3136672a1fc6ea53c3deb7e16fec92bb2d2",
+      "exports": [
+        "SceneControls2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/SelectedDetailsPanel2D.tsx",
+      "bytes": 14675,
+      "sha256": "b374f5abf2e84309a66e5a448d62e49ae4ab024424ec534538dc008dbb33b483",
+      "exports": [
+        "SelectedDetailsPanel2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/ServerRack2D.tsx",
+      "bytes": 8563,
+      "sha256": "a0b2c06bee0ef27bf4a40e75a585950c3003dc219858ef407ddb9a63829474ca",
+      "exports": [
+        "ServerRack2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/ServerUnit2D.tsx",
+      "bytes": 1257,
+      "sha256": "9ba08a631eb3d904f030a13a1846d7041ad7caef4253ab72f5db8f74db6c4801",
+      "exports": [
+        "ServerUnit2D"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/types2d.ts",
+      "bytes": 920,
+      "sha256": "73ce7e2420bc98c32f3121f2a4e8660eec267b4431da852096b40969012ac680",
+      "exports": [
+        "IsometricPoint",
+        "Rack2DData",
+        "CRAC2DData"
+      ]
+    },
+    {
+      "path": "src/components/datacenter2d/VentilationGrille2D.tsx",
+      "bytes": 1461,
+      "sha256": "8c8ea4a4f903612540ee02662b1e6f4a2da0a23796192f73b0710960d55f6a89",
+      "exports": [
+        "VentilationGrille2D"
+      ]
+    },
+    {
+      "path": "src/context/AO02Context.tsx",
+      "bytes": 9944,
+      "sha256": "3e9689c5e0fc9f4a94191ec7934021b64e43b2af05ef8b3f69880b37fb3c8569",
+      "exports": [
+        "AO02Provider",
+        "useAO02",
+        "useFacilityTelemetry",
+        "usePriorityTokenQueue",
+        "useAgentPipelineHeap",
+        "useTenantIsolationContext"
+      ]
+    },
+    {
+      "path": "src/context/DataContext.tsx",
+      "bytes": 22430,
+      "sha256": "f75d3a807a8b3ffb3dd3f496af4ac6c6a3e778e62cd2c0ad083bd892b711d722",
+      "exports": [
+        "DataProvider",
+        "useData"
+      ]
+    },
+    {
+      "path": "src/data/mockAO02Dataset.ts",
+      "bytes": 17961,
+      "sha256": "a37163154792e7ee192f09863174384da37ff1b0bfeaff22ef14376d977e2dc2",
+      "exports": [
+        "BASELINE_KPIS",
+        "INITIAL_SPATIAL_RACKS",
+        "INITIAL_COOLING_UNITS",
+        "INITIAL_ENVELOPES",
+        "generate12MonthTimeSeries"
+      ]
+    },
+    {
+      "path": "src/data/mockData.ts",
+      "bytes": 32785,
+      "sha256": "08f8126848286d41290842cace570cda164c890fbc074667392dc8b45a95f3c9",
+      "exports": [
+        "INITIAL_RACKS",
+        "INITIAL_CRACS",
+        "INITIAL_RESOURCES",
+        "INITIAL_ALERTS",
+        "INITIAL_ROOT_CAUSE",
+        "INITIAL_AUDIT_LOGS",
+        "DEFAULT_SETTINGS"
+      ]
+    },
+    {
+      "path": "src/index.css",
+      "bytes": 1222,
+      "sha256": "5943eb938a403be7824abc84c76d8bad4d4fdfa9707d302a4ac25ee2b673097e",
+      "exports": []
+    },
+    {
+      "path": "src/main.tsx",
+      "bytes": 226,
+      "sha256": "c89383baab814e1388ba5d9aa211b237ba9a35bf0a07ef3e73364a7fff84361b",
+      "exports": []
+    },
+    {
+      "path": "src/pages/Alerts.tsx",
+      "bytes": 16237,
+      "sha256": "5054fc19aafd8b371e40c00f7645521a9b87b187348f5d26c300da3bcad415f4",
+      "exports": [
+        "Alerts"
+      ]
+    },
+    {
+      "path": "src/pages/AuditLogs.tsx",
+      "bytes": 6878,
+      "sha256": "8caaa7a7b307f20303ff21b6e68c0d77c76e443a3360f06dcc8807de184384d2",
+      "exports": [
+        "AuditLogs"
+      ]
+    },
+    {
+      "path": "src/pages/DataCenter.tsx",
+      "bytes": 12277,
+      "sha256": "863ba6cba54179087598ee9e2fa402833ad7ba0a4f4b5adf0fa14191e16cc24b",
+      "exports": [
+        "DataCenter"
+      ]
+    },
+    {
+      "path": "src/pages/DataManagement.tsx",
+      "bytes": 10730,
+      "sha256": "0d815d7db2c7a8c8d4bf09c5c02212b803c270f1e2709084c599464fa977056a",
+      "exports": [
+        "DataManagement"
+      ]
+    },
+    {
+      "path": "src/pages/Forecasts.tsx",
+      "bytes": 17845,
+      "sha256": "183b249d201bfce556b136618c5731831799d9580bdfd98e9b0ba33fb8e535d0",
+      "exports": [
+        "Forecasts"
+      ]
+    },
+    {
+      "path": "src/pages/Overview.tsx",
+      "bytes": 20887,
+      "sha256": "09fcb3074ba52d0ee7d291d7694603e2ba58e78e268625d515dd13792a01e139",
+      "exports": [
+        "Overview"
+      ]
+    },
+    {
+      "path": "src/pages/Resources.tsx",
+      "bytes": 12694,
+      "sha256": "2f57f7cc461b3e2067e6b16d274126046727249765b5cf57aff8345b138db02b",
+      "exports": [
+        "Resources"
+      ]
+    },
+    {
+      "path": "src/pages/RootCause.tsx",
+      "bytes": 11604,
+      "sha256": "af2dc9c78f19da29b2834dbb36331658dba3fe9404c201983a78e37f147c7394",
+      "exports": [
+        "RootCause"
+      ]
+    },
+    {
+      "path": "src/pages/Settings.tsx",
+      "bytes": 10406,
+      "sha256": "629c8c54c3448e7b2050c33a3ef2b068b23c1af5a735bd7cfde4a21dbbc51daa",
+      "exports": [
+        "Settings"
+      ]
+    },
+    {
+      "path": "src/store/priorityQueue.ts",
+      "bytes": 4106,
+      "sha256": "fbbbeefd772a5f8c2f84ef2f1ed620c127dca9097b7b388648d9e4d333d81c1a",
+      "exports": [
+        "PriorityTokenQueue"
+      ]
+    },
+    {
+      "path": "src/store/sharedHeap.ts",
+      "bytes": 3186,
+      "sha256": "2a5b61f588a96d11b2cd30410ba46770555ba3f684eb91c7a2e1cb3b6e271487",
+      "exports": [
+        "SharedContextHeap"
+      ]
+    },
+    {
+      "path": "src/styles/theme.css",
+      "bytes": 3041,
+      "sha256": "24351e4d1cd90c280de24f9307071672f0508b603bd7ee751a03260e21701c8d",
+      "exports": []
+    },
+    {
+      "path": "src/types/ao02.ts",
+      "bytes": 4297,
+      "sha256": "5a6f39242024ba98f44cdd03dbd7a3d5b762960454cb3ff1ce8c2e508eddc662",
+      "exports": [
+        "ResourceType",
+        "PipelinePhase",
+        "GateDecision",
+        "SeverityStatus",
+        "TenantId",
+        "RESOURCE_CRITICALITY_WEIGHTS",
+        "TelemetryWindowSummary",
+        "CapacityForecast",
+        "RCADiagnosis",
+        "RemediationOption",
+        "RiskEvaluation",
+        "AuditTrailRecord",
+        "IncidentToken",
+        "HeapIncidentEnvelope",
+        "TimeSeriesDataPoint",
+        "RackSpatialNode",
+        "CoolingUnitNode",
+        "KPIMetrics"
+      ]
+    },
+    {
+      "path": "src/types/index.ts",
+      "bytes": 4544,
+      "sha256": "7077cf68f017ee9eb591a9c0231b82a2a11bdfe87a3b47fa258436ef072cdd70",
+      "exports": [
+        "HealthStatus",
+        "ResourceType",
+        "TenantName",
+        "SceneMode",
+        "ServerUnit",
+        "CapacityRisk",
+        "RackData",
+        "CoolerFault",
+        "CRACUnitData",
+        "ResourceMetric",
+        "AlertItem",
+        "RootCauseIncident",
+        "AuditLogEntry",
+        "SettingsState",
+        "ToastMessage"
+      ]
+    },
+    {
+      "path": "tsconfig.app.json",
+      "bytes": 551,
+      "sha256": "a7f488f74dd8aa7f5c082cf0e1bbe0d0f1fe0a194774d84f3dd3abe9c7aec703",
+      "exports": []
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 119,
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
+      "exports": []
+    },
+    {
+      "path": "tsconfig.node.json",
+      "bytes": 558,
+      "sha256": "d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8",
+      "exports": []
+    },
+    {
+      "path": "vite.config.ts",
+      "bytes": 220,
+      "sha256": "0c03207436c9eb3f2f35ec9ff13d17c6ae7e4c8d46ad394a556578cf12c80d74",
+      "exports": []
+    }
+  ],
+  "visualBaseline": {
+    "frontend\\src\\index.css": "f9524a3a37ceaa2bfba1808b1cf5528f38113cdc551b960baa086e3b018d7f0e",
+    "frontend\\src\\App.css": "37e2f0ead9dbe2353a1c9121fe3784d765685d8d538b17e864a91a1807ccdb93",
+    "frontend\\src\\App.tsx": "227fdeb8f6fd3b390f62e815c038473c9c7b19ebebc7f7de505bfbf7f78dc473",
+    "frontend\\src\\components\\digital-twin\\FacilityScene.tsx": "277f521db38da92b50e60f267b9e69b09e575dbad9206386e58e30244866dd99"
+  }
+}
