@@ -5,9 +5,10 @@ import hashlib
 from datetime import datetime
 from app.auth import identity_dependency
 from app.storage import SharedContextHeap, PriorityTokenQueue
-from app.models import HeapIncidentEnvelope, TelemetryWindowSummary
+from app.models import HeapIncidentEnvelope, TelemetryWindowSummary, CapacityForecast
 from app.telemetry import generate_telemetry
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.config import Settings
 from app.contracts import BootstrapDTO, GridPosition, HealthDTO, RackLayout
@@ -24,9 +25,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
-        allow_methods=["GET", "POST"],
+        allow_methods=["GET", "POST", "DELETE"],
         allow_headers=["Content-Type", "Authorization"],
     )
+
+    @app.middleware('http')
+    async def check_write_origin(request, call_next):
+        if request.method in ('POST','DELETE','PUT','PATCH') and request.headers.get('origin') and request.headers['origin'] not in settings.cors_origins:
+            return JSONResponse(status_code=403,content={'detail':'Untrusted request origin'})
+        return await call_next(request)
 
     @app.get("/api/health", response_model=HealthDTO)
     def health() -> HealthDTO:
@@ -75,6 +82,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if principal['role'] != 'operator': raise HTTPException(403, 'Operator role required')
         if envelope.token.hop_count or envelope.token.current_phase.value != 'RESOURCE_MONITORING' or envelope.audit_trail:
             raise HTTPException(422, 'New incidents must start at monitoring with no audit history')
+        if envelope.rca or envelope.remediation_options or envelope.risk_evaluation or envelope.human_approved is not None:
+            raise HTTPException(422,'Agent analysis and human decisions must come from the workflow')
         with heap.connection() as db:
             row=db.execute('SELECT series FROM snapshots WHERE hash=?',(envelope.telemetry.raw_series_sha256,)).fetchone()
         if not row: raise HTTPException(422, 'Create a telemetry window before submitting an incident')
@@ -82,6 +91,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         t=envelope.telemetry
         if (t.rack_id,t.tenant_id,t.resource_type.value,t.hard_capacity_limit,t.unit,t.current_utilization_pct,t.window_start,t.window_end) != (last['rack_id'],last['tenant_id'],last['resource_type'],last['capacity'],last['unit'],last['utilization_pct'],datetime.fromisoformat(first['timestamp']),datetime.fromisoformat(last['timestamp'])):
             raise HTTPException(422, 'Telemetry summary does not match source snapshot')
+        from app.forecasting import forecast_series
+        envelope.forecast=CapacityForecast.model_validate(forecast_series(points)['model'])
+        envelope.token.priority_number=queue.compute_priority_number(envelope.token.resource_type,t.current_utilization_pct,envelope.forecast.lead_time_weeks)
         if not heap.put_envelope(envelope): raise HTTPException(409, 'Incident ID or active scope already exists')
         return heap.get_envelope_for_agent(envelope.token.token_id)
 
@@ -90,6 +102,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try: return heap.get_tenant_isolated_view(token_id, principal)
         except (KeyError, PermissionError): raise HTTPException(404, 'Incident not found')
 
+    from app.operations import register_operations
+    register_operations(app, settings, heap, queue, identity, dataset)
     return app
 
 

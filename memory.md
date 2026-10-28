@@ -100,3 +100,35 @@ Append entries only. Read before architecture changes; skip updates for purely i
   SQLite file administrators can bypass application protections. Milestone 3
   implements numerical forecasts, measured KPIs, ordered LangGraph execution,
   checkpoints, provider adapters and human review. Archive migration remains pending.
+
+## 2026-10-28 / Milestone 3 forecasting and executable agents
+
+- Implemented NumPy robust trend forecasting and pandas UTC normalization,
+  confirmed transient filtering, regime detection, approximate uncertainty and
+  immutable forecast/snapshot provenance. Chronological held-out evaluator
+  computes actual error, coverage, false alarms and exhaustion-warning lead time.
+- Added executable LangGraph with SQLite checkpoints and idempotent phase effects,
+  workflow leases, max-hop exits, explicit pause/resume and approve/reject/defer.
+  RCA references measured workloads and same-tenant/rack cross-resource snapshots.
+  Simulations quantify hypothetical demand reductions with assumptions; risk is
+  explicitly heuristic. Approval completes advisory review, not physical repair.
+- Optional OpenAI Responses and Gemini structured explanations use bounded retries,
+  timeouts, evidence-ID validation and labeled deterministic fallback. Requests
+  verified against official structured-output docs and mocked transports; no
+  live provider credential test was performed.
+- Added authenticated operations APIs, expiring HttpOnly session cookies, origin
+  checks, scoped WebSocket incident updates, CSV validation/import and frozen
+  forecast records. Local synthetic demo login is opt-in/development/loopback only.
+  Preserved complete AO-02/legacy archive exports at fixed anchor plus original
+  source content with ZIP SHA-256. Authored archive KPI values remain examples.
+- Files: backend/app/{forecasting,workflow,providers,operations,ingestion,auth,
+  config,main,storage}.py, backend/app/data, backend/pyproject.toml and lock;
+  backend/tests/{test_forecasting,test_workflow,test_end_to_end,test_foundation}.py;
+  scripts/import-archive.mjs and this ledger.
+- Verification: all 25 backend tests and pip check pass, including full
+  snapshot→incident→durable review→defer→approve, restart, tenant REST/WS denial,
+  imported CSV rejections, source matching and read-only simulations.
+- Evaluation: 10,080 held-out predictions/360 cases/72 series; MAE 3.3702 pp,
+  RMSE 4.4154 pp, interval coverage 87.02% vs nominal90%, false alarms6/351=1.71%,
+  one known exhaustion detected with 7.714 weeks warning. Synthetic baseline only.
+- Next: finalize integrated frontend, mobile/scene/console checks, docs and cleanup.

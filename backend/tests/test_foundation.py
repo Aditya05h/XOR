@@ -29,7 +29,7 @@ class FoundationTests(unittest.TestCase):
     def test_health_and_read_only_boundary(self):
         self.assertEqual(self.client.get("/api/health").json()["status"], "ok")
         self.assertEqual(self.client.post("/api/bootstrap", json={}).status_code, 405)
-        self.assertEqual(self.client.get("/api/incidents").status_code, 405)
+        self.assertEqual(self.client.get("/api/incidents").status_code, 401)
 
     def test_frontend_resource_contract_matches_backend(self):
         source = (Path(__file__).resolve().parents[2] / "frontend/src/types/ao02.ts").read_text()

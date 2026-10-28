@@ -12,6 +12,10 @@ dependencies = [
   "pydantic>=2.10,<3",
   "pydantic-settings>=2.7,<3",
   "langgraph>=1,<2",
+  "langgraph-checkpoint-sqlite>=3,<4",
+  "numpy>=2,<3",
+  "pandas>=3,<4",
+  "httpx>=0.28,<1",
 ]
 
 [project.optional-dependencies]

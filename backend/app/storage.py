@@ -18,6 +18,9 @@ class SharedContextHeap:
             CREATE UNIQUE INDEX IF NOT EXISTS active_scope ON incidents(scope) WHERE active=1;
             CREATE TABLE IF NOT EXISTS audit (seq INTEGER PRIMARY KEY, token TEXT NOT NULL, record TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS snapshots (hash TEXT PRIMARY KEY, series TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS forecasts (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL, report TEXT NOT NULL);
+            CREATE TRIGGER IF NOT EXISTS forecasts_no_update BEFORE UPDATE ON forecasts BEGIN SELECT RAISE(ABORT,'immutable forecast'); END;
+            CREATE TRIGGER IF NOT EXISTS forecasts_no_delete BEFORE DELETE ON forecasts BEGIN SELECT RAISE(ABORT,'immutable forecast'); END;
             CREATE TRIGGER IF NOT EXISTS snapshots_no_update BEFORE UPDATE ON snapshots BEGIN SELECT RAISE(ABORT,'immutable snapshot'); END;
             CREATE TRIGGER IF NOT EXISTS snapshots_no_delete BEFORE DELETE ON snapshots BEGIN SELECT RAISE(ABORT,'immutable snapshot'); END;
             CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT,'immutable audit'); END;
@@ -32,7 +35,7 @@ class SharedContextHeap:
     def _save(self, db, envelope, actor, summary):
         record = AuditTrailRecord(token_id=envelope.token.token_id, phase=envelope.token.current_phase,
             actor=actor, telemetry_hash=envelope.telemetry.raw_series_sha256,
-            decision_summary=summary, model_configuration_id='domain-v1')
+            decision_summary=summary, model_configuration_id='robust-linear-daily-v1|domain-v1')
         envelope.audit_trail = []
         db.execute('UPDATE incidents SET envelope=? WHERE id=?', (envelope.model_dump_json(), envelope.token.token_id))
         db.execute('INSERT INTO audit(token,record) VALUES (?,?)', (envelope.token.token_id, record.model_dump_json()))

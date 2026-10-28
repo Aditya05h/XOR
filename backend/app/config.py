@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Principal(BaseModel):
+    model_config = {'extra':'forbid'}
     role: Literal['operator', 'tenant']
     tenant_id: Literal['T1', 'T2', 'T3'] | None = None
 
@@ -25,8 +26,11 @@ class Settings(BaseSettings):
     app_name: str = "XOR Capacity Observatory"
     database_path: Path = Path(__file__).resolve().parents[1] / 'incidents.sqlite3'
     auth_tokens: dict[str, Principal] = {}
+    demo_mode: bool = False
     environment: Literal["development", "test", "production"] = "development"
     llm_provider: Literal["deterministic", "openai", "gemini"] = "deterministic"
     openai_api_key: SecretStr = SecretStr("")
     gemini_api_key: SecretStr = SecretStr("")
+    openai_model: str = 'gpt-4.1-mini'
+    gemini_model: str = 'gemini-2.5-flash'
     cors_origins: list[str] = ["http://127.0.0.1:5173", "http://localhost:5173"]
