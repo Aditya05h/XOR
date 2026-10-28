@@ -216,3 +216,10 @@ Append entries only. Read before architecture changes; skip updates for purely i
 - Synthetic model validation is not a claim of real-facility accuracy or recovered
   ground truth. Tests cover download authorization, counts and model inference.
 - Verification: 29 backend tests, three browser workflows, production build and lint pass.
+
+## 2026-10-28 / Supply telemetry separately
+
+- Removed the telemetry download button and application download endpoint; upload
+  and analysis remain available. Exported the existing annual rack dataset to
+  ignored tmp/synthetic-12-month-telemetry.csv for delivery in Codex (26,280 rows).
+- Updated UI regression checks and download documentation to match this change.

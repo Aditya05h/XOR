@@ -48,7 +48,7 @@ and configure `AO02_AUTH_TOKENS`. Never place secrets in `VITE_` variables.
 6. Inspect evidence, model assumptions and audit events. Enter a note and defer,
    reject or approve. Approval records an advisory decision; it never actuates
    infrastructure or proves the underlying risk has disappeared.
-7. Inspect Evaluation results or upload/download readings in Telemetry ingestion.
+7. Inspect Evaluation results or upload readings in Telemetry ingestion.
    Completed advisory records are available through Incidents > Show history.
 
 ## Implemented behavior
@@ -156,8 +156,7 @@ explicit development-only session setting.
 ## Offline analysis and synthetic telemetry
 
 No external AI API, agent gateway or provider credentials are required. The
-workflow always explains evidence locally. Download 12-month synthetic telemetry
-from Telemetry ingestion: 26,280 daily rack readings, 2025-10-28 through 2026-10-27,
+workflow always explains evidence locally. The separately supplied 12-month synthetic telemetry CSV contains 26,280 daily rack readings, 2025-10-28 through 2026-10-27,
 12 racks, three tenants and six resources. Reimported sample readings retain the
 synthetic marker. The built-in timeline includes transient spikes, regime changes,
 a known storage exhaustion and recovery. Those are simulations, not live events.
